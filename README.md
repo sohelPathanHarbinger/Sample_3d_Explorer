@@ -66,6 +66,7 @@ Combine them with `&`, for example `index.html?project=starter&stop=2&pick`.
 ```
 index.html                  shared page shell
 css/style.css               shared styles; brand colours come from the project
+build-dist.mjs              optional: makes the compressed copy in dist/ for sharing (see the last section)
 engine/                     ← SHARED ENGINE: don't edit for one project
   boot.js                   loads the chosen project, applies its settings and branding, starts main.js
   config.js                 ALL default settings (camera, tour, mouse, walking, markers, graphics)
@@ -249,3 +250,55 @@ Download these into a `vendor/` folder and change the two URLs in the `importmap
 - the `examples/jsm/` folder of the same version (used: `environments/RoomEnvironment.js`, `utils/BufferGeometryUtils.js`, `loaders/GLTFLoader.js`)
 
 The demo video in the Harbinger `tour-data.js` is also online. Replace it with a local file in the project's `assets/video/`.
+
+---
+
+## Sharing a compressed copy (`dist/`)
+
+`build-dist.mjs` makes a copy of the site in `dist/` with only what the page needs: `index.html` without its comments, minified JavaScript and CSS, and every project's assets. The docs and the git history are left out. Use it to share the tour from your own computer with a temporary link.
+
+### What you need
+- **[Node.js](https://nodejs.org/)** 20 or newer (the LTS version is fine). Check with `node --version`.
+- **Python**, to run the copy in step 2 (as in "How to run").
+- **An internet connection the first time.** The script downloads a small minifier called esbuild and reuses it afterwards.
+
+### Steps
+
+1. **Build** the copy:
+   - In VS Code, open a terminal with **Terminal** → **New Terminal** (Ctrl+\`). It opens in this folder.
+   - Run:
+     ```
+     node build-dist.mjs
+     ```
+   - After a few seconds it prints:
+     ```
+     Done: dist/ is ready. Try it with:  python -m http.server 8080 --directory dist
+     ```
+   - `dist/` now appears in the file explorer, greyed out because git ignores it. Each run deletes the old `dist/` and builds a fresh one.
+2. **Run** it:
+   ```
+   python -m http.server 8080 --directory dist
+   ```
+   Open http://localhost:8080/ and check the tour works. Keep this terminal running (Ctrl+C stops it).
+3. **Share** it from VS Code:
+   - Open the **Ports** tab next to **Terminal** (or Ctrl+Shift+P → **Ports: Focus on Ports View**).
+   - Click **Forward a Port**, enter `8080` and sign in with GitHub when asked.
+   - Right-click the port → **Port Visibility** → **Public**. Otherwise visitors are asked to sign in.
+   - Right-click the port → **Copy Local Address** and send that link. Add `?project=starter` to show another project.
+
+### Good to know
+- Run `node build-dist.mjs` again after every change (texts, stops, images, colours). `dist/` does not update by itself.
+- The link only works while your computer is on and VS Code and the server are running.
+- Visitors see a Microsoft "dev tunnel" notice the first time and click **Continue**.
+- To stop sharing, right-click the port → **Stop Forwarding Port**, then press Ctrl+C in the terminal.
+- Don't share through Live Server: it serves the whole project folder, including `.git`.
+- `dist/` is in `.gitignore`, so it is never committed.
+
+### If something goes wrong
+
+| Message | Fix |
+|---|---|
+| `node is not recognized` | Install Node.js, then close and reopen VS Code. |
+| `Cannot find module ...build-dist.mjs` | The terminal is in another folder. `cd` to this folder first. |
+| A network or `npx` download error | You are offline, or a network proxy blocks the esbuild download. Try again on another network. |
+| `python is not recognized` | Install Python, or use `npx serve dist` and open the address it prints. |
