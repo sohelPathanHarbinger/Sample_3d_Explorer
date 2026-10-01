@@ -66,7 +66,7 @@ Combine them with `&`, for example `index.html?project=starter&stop=2&pick`.
 ```
 index.html                  shared page shell
 css/style.css               shared styles; brand colours come from the project
-build-dist.mjs              optional: makes the compressed copy in dist/ for sharing (see the last section)
+build-dist.mjs              optional: makes the compressed copy in dist/ for sharing (see "Sharing a compressed copy")
 engine/                     ← SHARED ENGINE: don't edit for one project
   boot.js                   loads the chosen project, applies its settings and branding, starts main.js
   config.js                 ALL default settings (camera, tour, mouse, walking, markers, graphics)
@@ -250,6 +250,30 @@ Download these into a `vendor/` folder and change the two URLs in the `importmap
 - the `examples/jsm/` folder of the same version (used: `environments/RoomEnvironment.js`, `utils/BufferGeometryUtils.js`, `loaders/GLTFLoader.js`)
 
 The demo video in the Harbinger `tour-data.js` is also online. Replace it with a local file in the project's `assets/video/`.
+
+---
+
+## Publishing on GitHub Pages (free, permanent link)
+
+GitHub Pages hosts the tour for free at a link that keeps working when your computer is off.
+
+1. Open https://github.com/sohelPathanHarbinger/Sample_3d_Explorer
+2. Click **Settings**, then **Pages** in the left sidebar.
+3. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+4. Set **Branch** to **main**, set the folder to **/ (root)**, and click **Save**.
+5. Wait 1–2 minutes and refresh the page. It will say **"Your site is live at…"**.
+
+The tour is then at:
+```
+https://sohelpathanharbinger.github.io/Sample_3d_Explorer/
+```
+Add `?project=starter` (or any option from "Address options") to the end, for example `…/Sample_3d_Explorer/?project=starter&stop=2`.
+
+Good to know:
+- Every push to `main` updates the site by itself within a couple of minutes.
+- On a free GitHub account, Pages only works while the repository is **public**.
+- Pages publishes the files in the repository as they are, so visitors can read the normal source code. It does not use `dist/`, which is never committed.
+- To take the site down: **Settings** → **Pages** → **Unpublish site**.
 
 ---
 
